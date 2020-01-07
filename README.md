@@ -14,8 +14,14 @@ npm run dev
 # build electron application for production
 npm run build
 
+error to see:
 
+https://blog.csdn.net/Gabriel_wei/article/details/92794291
+
+path can not contain Chinese
 ```
+
+
 
 ---
 
