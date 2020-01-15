@@ -1,5 +1,38 @@
 #index{
-    .item{
-        font-size: 14px;
+    width: 140px;
+    opacity: 0.2;
+
+    .draggable{
+        width: 140px;
+        color: #000000;
+        background-color: transparent;
+
+        .option{
+            display: flex;
+
+            p{
+                font-size: 14px;
+                margin: 0;
+            }
+        }
+
+        .init{
+            -webkit-app-region: no-drag;
+
+            .number{
+                width: 75px;
+                height: 600px;
+                display: block;
+            }
+
+            .button{
+                display: block;
+            }
+        }
+
+        .item{
+            font-size: 14px;
+            -webkit-app-region: drag;
+        }
     }
 }

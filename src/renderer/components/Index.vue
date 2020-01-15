@@ -1,23 +1,122 @@
 <template>
-  <div id="index">
-    <div class="item" v-for="item in stock" :key="item.id">
-      |<span>{{item.name}}</span>|<span>{{item.nowPrice}}</span>|<span>{{item.percentage}}</span>|
+  <div id="index" ref="box">
+    <div class="draggable" ref="container">
+      <div class="option">
+        <p class="color" @click="changeColor()">颜色</p>
+        <p class="background" @click="changeBackground()">背景</p>
+        <p class="opacity" @click="changeOpacity()">透明</p>
+        <p class="hide" @click="hideMenu()">隐藏</p>
+      </div>
+      <div class="init" v-show="confirm">
+        <textarea class="number" type="text" placeholder="sh600001,sz000001" v-model="stockNumber"></textarea>
+        <button class="button" @click="confirmStock()">确定</button>
+      </div>
+      <div class="item" v-for="item in stock" :key="item.id">
+        |<span>{{item.name}}</span>|<span>{{item.nowPrice}}</span>|<span>{{item.percentage}}</span>|
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  const fs = require("fs");
+  import axios from 'axios';
+  //const fs = require("fs");
+  //const path = require("path");
+  let ipcRenderer = require('electron').ipcRenderer;
 
   export default {
     name: 'index',
     data() {
       return {
-        stock: []
+        stock: [],
+        //colorCollection: ["#000000","#ffffff","#ff0000","#00ff00","#0000ff"],
+        currentColor: 1,
+        //backgroundCollection: ["transparent","#000000","#ffff00","#00ffff","#ff00ff"],
+        currentBackground: 1,
+        //backgroundCollection: [0.2,0.4,0.6,0.8,1],
+        currentOpacity: 1,
+        confirm: true,
+        stockNumber: 'sz399001,sh000001,sz399006,sz000848,sh601186,sh600837,sh600050,sh601318,sz000938,sh603198,sh600171,sz002223,sh600197,sz000967,sh600062,sz000963,sz002465,sh603019,sh601211,sh600879,sz002179,sz300122,sz002020,sz002262,sz300114,sh600161,sz002415,sz000028,sz002007,sh600298,sh603589,sz000513,sz300244,sz002025,sh600260,sz300339,sh600271,sz300642',
       }
     },
     methods: {
+      confirmStock() {
+        this.confirm = false;
+        setInterval(()=>{
+          this.getApiData(this.stockNumber)
+        },2000);
+        //console.log(this.stockNumber)
+      },
+      changeColor() {
+        //let i = this.colorCollection.indexOf(this.$refs.container.style.color);
+        //console.log(this.$refs.container.style.color,i)
+        //this.$refs.container.style.color = this.colorCollection[++i>=this.colorCollection.length?0:i];
+        
+        if(this.currentColor == 1){
+          this.currentColor = 2;
+          this.$refs.container.style.color = "#ffffff";
+        }
+        else if(this.currentColor == 2){
+          this.currentColor = 3;
+          this.$refs.container.style.color = "#ff0000";
+        }
+        else if(this.currentColor == 3){
+          this.currentColor = 4;
+          this.$refs.container.style.color = "#00ff00";
+        }
+        else if(this.currentColor == 4){
+          this.currentColor = 5;
+          this.$refs.container.style.color = "#0000ff";
+        }
+        else{
+          this.currentColor = 1;
+          this.$refs.container.style.color = "#000000";
+        }
+      },
+      changeBackground() {
+        if(this.currentBackground == 1){
+          this.currentBackground = 2;
+          this.$refs.container.style.backgroundColor = "#000000";
+        }
+        else if(this.currentBackground == 2){
+          this.currentBackground = 3;
+          this.$refs.container.style.backgroundColor = "#ffff00";
+        }
+        else if(this.currentBackground == 3){
+          this.currentBackground = 4;
+          this.$refs.container.style.backgroundColor = "#00ffff";
+        }
+        else if(this.currentBackground == 4){
+          this.currentBackground = 5;
+          this.$refs.container.style.backgroundColor = "#ff00ff";
+        }
+        else{
+          this.currentBackground = 1;
+          this.$refs.container.style.backgroundColor = "transparent";
+        }
+      },
+      changeOpacity() {
+        if(this.currentOpacity == 1){
+          this.currentOpacity = 2;
+          this.$refs.box.style.opacity = 0.4;
+        }
+        else if(this.currentOpacity == 2){
+          this.currentOpacity = 3;
+          this.$refs.box.style.opacity = 0.6;
+        }
+        else if(this.currentOpacity == 3){
+          this.currentOpacity = 4;
+          this.$refs.box.style.opacity = 0.8;
+        }
+        else if(this.currentOpacity == 4){
+          this.currentOpacity = 5;
+          this.$refs.box.style.opacity = 1;
+        }
+        else{
+          this.currentOpacity = 1;
+          this.$refs.box.style.opacity = 0.2;
+        }
+      },
       open (link) {
         this.$electron.shell.openExternal(link)
       },
@@ -70,12 +169,69 @@
         .catch((error)=>{
           console.log(error)
         })
+      },
+      keyboardEvent() {
+        document.onkeydown = (e) => {
+          //console.log(e.keyCode,this)
+          if(e.keyCode == 81){
+            this.$refs.container.style.color = "#000000";
+          }
+          else if(e.keyCode == 87){
+            this.$refs.container.style.color = "#ffffff";
+          }
+          else if(e.keyCode == 69){
+            this.$refs.container.style.color = "#ff0000";
+          }
+          else if(e.keyCode == 82){
+            this.$refs.container.style.color = "#00ff00";
+          }
+          else if(e.keyCode == 84){
+            this.$refs.container.style.color = "#0000ff";
+          }
+          else if(e.keyCode == 65){
+            this.$refs.container.style.backgroundColor = "transparent";
+          }
+          else if(e.keyCode == 83){
+            this.$refs.container.style.backgroundColor = "#000000";
+          }
+          else if(e.keyCode == 68){
+            this.$refs.container.style.backgroundColor = "#ffff00";
+          }
+          else if(e.keyCode == 70){
+            this.$refs.container.style.backgroundColor = "#00ffff";
+          }
+          else if(e.keyCode == 71){
+            this.$refs.container.style.backgroundColor = "#ff00ff";
+          }
+          else if(e.keyCode == 90){
+            this.$refs.box.style.opacity = 0.2;
+          }
+          else if(e.keyCode == 88){
+            this.$refs.box.style.opacity = 0.4;
+          }
+          else if(e.keyCode == 67){
+            this.$refs.box.style.opacity = 0.6;
+          }
+          else if(e.keyCode == 86){
+            this.$refs.box.style.opacity = 0.8;
+          }
+          else if(e.keyCode == 66){
+            this.$refs.box.style.opacity = 1;
+          }
+          else if(e.keyCode == 80){
+            this.hideMenu();
+          }
+        }
+      },
+      hideMenu() {
+        ipcRenderer.send('window-min');
       }
     },
     mounted() {
-      let data = fs.readFileSync("src/userData/stock.data", "utf8");
+      //let data = fs.readFileSync(path.join(__dirname, '../userData/stock.data'), "utf8");
+      //console.log(path.join(__dirname, '../userData/stock.data'));
       //console.log(data)
-      setInterval(()=>{this.getApiData(data)},2000);
+      this.keyboardEvent();
     },
   }
 </script>
