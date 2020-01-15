@@ -34,7 +34,7 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 2. electron-vue爬坑：使用npm run build 报错：https://blog.csdn.net/Gabriel_wei/article/details/92794291
 3. 项目路径需要全英文才能打包,打包使用electron-builder
 4. 教程w3cschool：https://www.w3cschool.cn/electronmanual/2av81qla.html
-5. Electron 文档
+5. Electron 文档:https://electronjs.org/docs
 6. Electron无边框窗口（最小化、最大化、关闭、拖动）以及动态改变窗口大小:https://blog.csdn.net/fukaiit/article/details/91351448
 7. Electron主进程与渲染进程通信，webview与其加载页间的通信:https://blog.csdn.net/Lucky_bo/article/details/91419427
 8. 使用electron将应用程序加入到系统托盘:https://www.cnblogs.com/zjf-1992/p/7534944.html
