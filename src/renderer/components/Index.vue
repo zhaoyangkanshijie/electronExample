@@ -11,6 +11,7 @@
       <div class="init" v-show="state == 1">
         <textarea class="number" type="text" placeholder="sh600001,sz000001" v-model="stockNumber"></textarea>
         <button class="button" @click="confirmStock()">确定</button>
+        <iframe class="picture" src="http://image.sinajs.cn/newchart/min/n/sh000001.gif"></iframe>
       </div>
       <div class="item" v-for="item in stock" :key="item.id" v-show="state == 2">
         |<span>{{item.name}}</span>|<span>{{item.nowPrice}}</span>|<span>{{item.percentage}}</span>|
