@@ -39,3 +39,4 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 7. Electron主进程与渲染进程通信，webview与其加载页间的通信:https://blog.csdn.net/Lucky_bo/article/details/91419427
 8. 使用electron将应用程序加入到系统托盘:https://www.cnblogs.com/zjf-1992/p/7534944.html
 9. electron实现最小化到托盘:https://www.zhuyuntao.cn/electron%E5%AE%9E%E7%8E%B0%E6%9C%80%E5%B0%8F%E5%8C%96%E5%88%B0%E6%89%98%E7%9B%98
+10. Electron应用使用electron-builder配合electron-updater实现自动更新:https://segmentfault.com/a/1190000012904543

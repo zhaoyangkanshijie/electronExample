@@ -1,9 +1,9 @@
 #index{
-    width: 140px;
+    width: 170px;
     opacity: 0.2;
 
     .draggable{
-        width: 140px;
+        width: 170px;
         color: #000000;
         background-color: transparent;
 
@@ -33,6 +33,34 @@
         .item{
             font-size: 14px;
             -webkit-app-region: drag;
+        }
+
+        .options{
+
+
+            .frequency{
+
+            }
+
+            .sort{
+
+
+                .aesc{
+
+                }
+
+                .desc{
+
+                }
+
+                span.active{
+                    background-color: aquamarine;
+                }
+            }
+
+            .optionsSubmit{
+
+            }
         }
     }
 }

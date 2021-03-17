@@ -6,13 +6,22 @@
         <p class="background" @click="changeBackground()">背景</p>
         <p class="opacity" @click="changeOpacity()">透明</p>
         <p class="hide" @click="hideMenu()">隐藏</p>
+        <p class="hide" @click="openOption()">选项</p>
       </div>
-      <div class="init" v-show="confirm">
+      <div class="init" v-show="state == 1">
         <textarea class="number" type="text" placeholder="sh600001,sz000001" v-model="stockNumber"></textarea>
         <button class="button" @click="confirmStock()">确定</button>
       </div>
-      <div class="item" v-for="item in stock" :key="item.id">
+      <div class="item" v-for="item in stock" :key="item.id" v-show="state == 2">
         |<span>{{item.name}}</span>|<span>{{item.nowPrice}}</span>|<span>{{item.percentage}}</span>|
+      </div>
+      <div class="options" v-show="state == 3">
+        <input class="frequency" placeholder="刷新频率" v-model="options.frequency" />
+        <p class="sort">
+          <span class="aesc" :class="options.orderByAesc == true ? 'active': ''" @click="options.orderByAesc = true">正序</span>
+          <span class="desc" :class="options.orderByAesc == false ? 'active': ''" @click="options.orderByAesc = false">倒序</span>
+        </p>
+        <button class="optionsSubmit" @click="submitOptions()">确定</button>
       </div>
     </div>
   </div>
@@ -35,17 +44,21 @@
         currentBackground: 1,
         //backgroundCollection: [0.2,0.4,0.6,0.8,1],
         currentOpacity: 1,
-        confirm: true,
-        stockNumber: 'sz399001,sh000001,sz399006,sz000848,sh601186,sh600837,sh600050,sh601318,sz000938,sh603198,sh600171,sz002223,sh600197,sz000967,sh600062,sz000963,sz002465,sh603019,sh601211,sh600879,sz002179,sz300122,sz002020,sz002262,sz300114,sh600161,sz002415,sz000028,sz002007,sh600298,sh603589,sz000513,sz300244,sz002025,sh600260,sz300339,sh600271,sz300642',
+        state: 1,
+        stockNumber: 'sz399001,sh000001,sz399006,sh588000,sh601933,sz002815,sz002189,sz300533,sz300773,sz300498,sz000938,sh600487,sh603936,sz002252,sz300666,sz300632,sh601211,sz000555,sz002296,sh601186,sz000963,sz300020,sz300231,sz002938,sz300042,sh600373,sh600837,sz300007,sh600741,sh600643,sz002602,sh510710,sh512710,sh515750,sz002236,sz159998,sz002384,sz002230,sz002001,sh601601,sz002465,sz002281,sz159870',
+        options: {
+          orderByAesc: true,
+          frequency: 2000
+        },
+        timer: null
       }
     },
     methods: {
       confirmStock() {
-        this.confirm = false;
-        setInterval(()=>{
-          this.getApiData(this.stockNumber)
-        },2000);
-        //console.log(this.stockNumber)
+        this.state = 2;
+        this.timer = setInterval(()=>{
+          this.getApiData()
+        },this.options.frequency);
       },
       changeColor() {
         //let i = this.colorCollection.indexOf(this.$refs.container.style.color);
@@ -120,8 +133,8 @@
       open (link) {
         this.$electron.shell.openExternal(link)
       },
-      getApiData(data) {
-        axios.get('http://hq.sinajs.cn/list='+data)
+      getApiData() {
+        axios.get('http://hq.sinajs.cn/list='+this.stockNumber)
         .then((response)=>{
           //console.log(response.data)
           let data = response.data.toString();
@@ -132,7 +145,7 @@
           let stock = [];
           for(let i = 0;i < content.length;i++){
             var detail = content[i].split(',');
-            let name = detail[0].toString().slice(0,2);
+            let name = detail[0].toString();
             let yesterdayPrice = parseFloat(detail[2]);
             let nowPrice = parseFloat(detail[3]);
             let highest = parseFloat(detail[4]);
@@ -154,13 +167,20 @@
             }
             tmp.push(obj)
           }
-          Array.prototype.push.apply(stock,tmp.slice(0,3));
+          Array.prototype.push.apply(stock,tmp.slice(0,4));
           //console.log(1,stock)
-          tmp = tmp.slice(3);
+          tmp = tmp.slice(4);
           //console.log(2,stock)
-          tmp.sort((a,b)=>{
-            return parseFloat(a.percent) - parseFloat(b.percent);
-          });
+          if(this.options.orderByAesc){
+            tmp.sort((a,b)=>{
+              return parseFloat(a.percent) - parseFloat(b.percent);
+            });
+          }
+          else{
+            tmp.sort((a,b)=>{
+              return parseFloat(b.percent) - parseFloat(a.percent);
+            });
+          }
           //console.log(3,stock)
           Array.prototype.push.apply(stock,tmp);
           this.stock = stock;
@@ -225,6 +245,16 @@
       },
       hideMenu() {
         ipcRenderer.send('window-min');
+      },
+      openOption() {
+        this.state = 3;
+      },
+      submitOptions() {
+        clearInterval(this.timer);
+        this.state = 2;
+        this.timer = setInterval(()=>{
+          this.getApiData()
+        },this.options.frequency);
       }
     },
     mounted() {

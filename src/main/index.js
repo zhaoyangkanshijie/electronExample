@@ -24,7 +24,10 @@ function createWindow () {
     height: 670,
     useContentSize: true,
     width: 160,
-    webPreferences: {webSecurity: false},//跨域请求
+    webPreferences: {
+      webSecurity: false,//跨域请求
+      nodeIntegration:true //在网页中集成Node
+    },
     transparent: true,
     frame:false,//隐藏边框
     skipTaskbar:true,//不显示在任务栏
