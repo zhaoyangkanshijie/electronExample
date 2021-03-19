@@ -1,9 +1,9 @@
 #index{
-    width: 170px;
+    width: 100%;//170px
     opacity: 0.2;
 
     .draggable{
-        width: 170px;
+        width: 100%;
         color: #000000;
         background-color: transparent;
 
@@ -30,9 +30,24 @@
             }
         }
 
-        .item{
-            font-size: 14px;
-            -webkit-app-region: drag;
+        .list{
+            
+
+            .item{
+                font-size: 14px;
+
+                .name{
+                    -webkit-app-region: no-drag;
+                }
+
+                .price{
+                    -webkit-app-region: drag;
+                }
+
+                .precent{
+                    -webkit-app-region: drag;
+                }
+            }
         }
 
         .options{
@@ -60,6 +75,22 @@
 
             .optionsSubmit{
 
+            }
+        }
+
+        .actual{
+
+            .actual-function{
+
+                .actual-title{
+                    
+                }
+            }
+
+            .picture{
+                display: block;
+                width: 100%;
+                -webkit-app-region: drag;
             }
         }
     }

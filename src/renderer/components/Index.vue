@@ -11,10 +11,13 @@
       <div class="init" v-show="state == 1">
         <textarea class="number" type="text" placeholder="sh600001,sz000001" v-model="stockNumber"></textarea>
         <button class="button" @click="confirmStock()">确定</button>
-        <iframe class="picture" src="http://image.sinajs.cn/newchart/min/n/sh000001.gif"></iframe>
       </div>
-      <div class="item" v-for="item in stock" :key="item.id" v-show="state == 2">
-        |<span>{{item.name}}</span>|<span>{{item.nowPrice}}</span>|<span>{{item.percentage}}</span>|
+      <div class="list" v-show="state == 2">
+        <div class="item" v-for="item in stock" :key="item.id">
+          <span class="name" @click="showPicture(item.number)">|{{item.name}}</span>
+          <span class="price">|{{item.nowPrice}}</span>
+          <span class="precent">|{{item.percentage}}|</span>
+        </div>
       </div>
       <div class="options" v-show="state == 3">
         <input class="frequency" placeholder="刷新频率" v-model="options.frequency" />
@@ -23,6 +26,17 @@
           <span class="desc" :class="options.orderByAesc == false ? 'active': ''" @click="options.orderByAesc = false">倒序</span>
         </p>
         <button class="optionsSubmit" @click="submitOptions()">确定</button>
+        <button class="initStock" @click="initStock()">初始化</button>
+      </div>
+      <div class="actual" v-show="state == 4">
+        <div class="actual-function">
+          <button class="actual-title" @click="actualTime='min'">分钟</button>
+          <button class="actual-title" @click="actualTime='daily'">日</button>
+          <button class="actual-title" @click="actualTime='weekly'">周</button>
+          <button class="actual-title" @click="actualTime='monthly'">月</button>
+        </div>
+        <img class="picture" :src="'http://image.sinajs.cn/newchart/'+actualTime+'/n/'+activeNumber+'.gif'" />
+        <button @click="state = 2">返回</button>
       </div>
     </div>
   </div>
@@ -51,7 +65,9 @@
           orderByAesc: true,
           frequency: 2000
         },
-        timer: null
+        timer: null,
+        actualTime: 'min',
+        activeNumber: 'sz399001'
       }
     },
     methods: {
@@ -144,6 +160,7 @@
           });
           let tmp = [];
           let stock = [];
+          let number = this.stockNumber.split(',');
           for(let i = 0;i < content.length;i++){
             var detail = content[i].split(',');
             let name = detail[0].toString();
@@ -157,6 +174,7 @@
             let obj = {
               id: i,
               name: name,
+              number: number[i],
               yesterdayPrice: yesterdayPrice,
               priceNumber: nowPrice,
               nowPrice: nowPrice.toFixed(2).toString().padStart(7,'0'),
@@ -256,6 +274,15 @@
         this.timer = setInterval(()=>{
           this.getApiData()
         },this.options.frequency);
+      },
+      initStock() {
+        this.state = 1;
+        clearInterval(this.timer);
+      },
+      showPicture(number) {
+        console.log(number)
+        this.state = 4;
+        this.activeNumber = number;
       }
     },
     mounted() {
