@@ -21,9 +21,9 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 670,
+    height: 700,
     useContentSize: true,
-    width: 160,
+    width: 200,
     webPreferences: {
       webSecurity: false,//跨域请求
       nodeIntegration:true //在网页中集成Node
@@ -69,6 +69,10 @@ function createWindow () {
     mainWindow.hide(); 
     mainWindow.setSkipTaskbar(true);
     //mainWindow.minimize();
+  })
+
+  ipcMain.on('window-resize', function(sender,width) {
+    mainWindow.setSize(width, mainWindow.getSize()[1])
   })
 
   mainWindow.on('closed', () => {

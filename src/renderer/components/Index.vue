@@ -260,10 +260,28 @@
           else if(e.keyCode == 80){
             this.hideMenu();
           }
+          else if(e.keyCode == 49){
+            this.resizeWindow(1);
+          }
+          else if(e.keyCode == 50){
+            this.resizeWindow(2);
+          }
+          else if(e.keyCode == 51){
+            this.resizeWindow(3);
+          }
+          else if(e.keyCode == 52){
+            this.resizeWindow(4);
+          }
+          else if(e.keyCode == 53){
+            this.resizeWindow(5);
+          }
         }
       },
       hideMenu() {
         ipcRenderer.send('window-min');
+      },
+      resizeWindow(number) {
+        ipcRenderer.send('window-resize', number*200);
       },
       openOption() {
         this.state = 3;
